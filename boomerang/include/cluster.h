@@ -16,7 +16,7 @@
  *============================================================================*/
 
 /*
- * $Revision: 1.5 $
+ * $Revision: 1.3 $
  * 03 May 04 - Trent: Created
  */
 
@@ -50,7 +50,7 @@ public:
     void addChild(Cluster *n);
     void removeChild(Cluster *n);
     Cluster *getParent() { return parent; }
-    bool hasChildren() { return children.size() > 0; }
+    bool hasChildren() { return children.size(); }
     void openStream(const char *ext);
     void openStreams(const char *ext);
     void closeStreams();
@@ -58,8 +58,6 @@ public:
     const char *makeDirs();
     const char *getOutPath(const char *ext);
     Cluster *find(const char *nam);
-
-    void printTree(std::ostream &out);
 protected:
 
     friend class XMLProgParser;

@@ -4,12 +4,16 @@
  *              tests the sslparser.y etc
  *============================================================================*/
 /*
- * $Revision: 1.5 $
+ * $Revision: 1.4 $
  *
  * 13 May 02 - Mike: Created
  */
 
-#define SPARC_SSL		"frontend/machine/sparc/sparc.ssl"
+#ifndef BOOMDIR
+#error Must define BOOMDIR
+#endif
+
+#define SPARC_SSL		BOOMDIR "/frontend/machine/sparc/sparc.ssl"
 
 #include "ParserTest.h"
 #include "sslparser.h"

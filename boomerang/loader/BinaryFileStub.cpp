@@ -1,6 +1,5 @@
 /* 26 Nov 02 - Mike: Fixed return types to avoid warnings with gcc */
 
-#include <assert.h>
 #include "BinaryFileStub.h"
 
 // text segment of hello pentium

@@ -18,13 +18,12 @@
  *============================================================================*/
  
 /*
- * $Revision: 1.22 $
+ * $Revision: 1.20 $
  *
  * 27 Apr 02 - Mike: Mods for boomerang
  * 17 Jul 02 - Mike: readSSLFile resets internal state as well
  * 04 Feb 03 - Mike: Fixed a bug with instantiating NOP (could cause bus error?)
  * 22 May 03 - Mike: Fixed a small memory leak (char* opcode)
- * 16 Jul 04 - Mike: Simplify decoded semantics
  */
 
 /*==============================================================================
@@ -252,8 +251,8 @@ void RTLInstDict::print(std::ostream& os /*= std::cout*/)
         // print the parameters
         std::list<std::string>& params = (*p).second.params;
         int i = params.size();
-        for (std::list<std::string>::iterator s = params.begin();
-          s != params.end(); s++,i--)
+        for (std::list<std::string>::iterator s = params.begin();s != params.end();
+                s++,i--)
             os << *s << (i != 1 ? "," : "");
         os << "\n";
     
@@ -261,24 +260,7 @@ void RTLInstDict::print(std::ostream& os /*= std::cout*/)
         RTL& rtlist = (*p).second.rtl;
         rtlist.print(os);
         os << "\n";
-    }
-
-#if 0
-    // Detailed register map
-    os << "\nDetailed register map\n";
-    std::map<int, Register, std::less<int> >::iterator rr;
-    for (rr = DetRegMap.begin(); rr != DetRegMap.end(); rr++) {
-        int n = rr->first;
-        Register* pr = &rr->second;
-        os << "number " << n <<
-          " name " << pr->g_name() <<
-          " size " << std::dec << pr->g_size() <<
-          " address 0x" << std::hex << (unsigned)pr->g_address() <<
-          " mappedIndex " << std::dec << pr->g_mappedIndex() <<
-          " mappedOffset " << pr->g_mappedOffset() <<
-          " flt " << pr->isFloat() << "\n";
-    }
-#endif
+    }   
 }
 
 /*==============================================================================
@@ -421,7 +403,7 @@ bool RTLInstDict::partialType(Exp* exp, Type& ty)
  * RETURNS:          the instantiated list of Exps
  *============================================================================*/
 std::list<Statement*>* RTLInstDict::instantiateRTL(std::string& name,
-  ADDRESS natPC, std::vector<Exp*>& actuals) {
+  std::vector<Exp*>& actuals) {
     // If -f is in force, use the fast (but not as precise) name instead
     const std::string* lname = &name;
     // FIXME: settings
@@ -435,7 +417,7 @@ if (0) {
     assert( idict.find(*lname) != idict.end() ); /* lname is in dictionary */
     TableEntry& entry = idict[*lname];
 
-    return instantiateRTL( entry.rtl, natPC, entry.params, actuals );
+    return instantiateRTL( entry.rtl, entry.params, actuals );
 }
 
 /*==============================================================================
@@ -448,7 +430,7 @@ if (0) {
  *                   actuals - the actual parameter values
  * RETURNS:          the instantiated list of Exps
  *============================================================================*/
-std::list<Statement*>* RTLInstDict::instantiateRTL(RTL& rtl, ADDRESS natPC,
+std::list<Statement*>* RTLInstDict::instantiateRTL(RTL& rtl, 
         std::list<std::string>& params, std::vector<Exp*>& actuals) {
     assert(params.size() == actuals.size());
 
@@ -457,28 +439,23 @@ std::list<Statement*>* RTLInstDict::instantiateRTL(RTL& rtl, ADDRESS natPC,
     rtl.deepCopyList(*newList);
 
     // Iterate through each Statement of the new list of stmts
-    std::list<Statement*>::iterator ss;
-    for (ss = newList->begin(); ss != newList->end(); ss++) {
+    for (std::list<Statement*>::iterator rt = newList->begin();
+      rt != newList->end(); rt++) {
         // Search for the formals and replace them with the actuals
         std::list<std::string>::iterator param = params.begin();
         std::vector<Exp*>::const_iterator actual = actuals.begin();
         for (; param != params.end(); param++, actual++) {
             /* Simple parameter - just construct the formal to search for */
             Exp* formal = Location::param(param->c_str());
-            (*ss)->searchAndReplace(formal, *actual);
+            (*rt)->searchAndReplace(formal, *actual);
             //delete formal;
         }
-        (*ss)->fixSuccessor();
+        (*rt)->fixSuccessor();
         if (Boomerang::get()->debugDecoder)
-            std::cout << "          " << *ss << "\n";
+            std::cout << "          " << *rt << "\n";
     }
 
     transformPostVars( newList, true );
-
-    // Perform simplifications, e.g. *1 in Pentium addressing modes
-    for (ss = newList->begin(); ss != newList->end(); ss++)
-        (*ss)->simplify();
-
     return newList;
 }
 

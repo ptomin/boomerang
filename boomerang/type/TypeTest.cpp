@@ -4,13 +4,17 @@
  *              tests the Type class and some utility functions
  *============================================================================*/
 /*
- * $Revision: 1.3 $
+ * $Revision: 1.2 $
  *
  * 09 Apr 02 - Mike: Created
  * 22 Aug 03 - Mike: Extended for Constraint tests
  */
 
-#define HELLO_WINDOWS       "test/windows/hello.exe"
+#ifndef BOOMDIR
+#error Must define BOOMDIR
+#endif
+
+#define HELLO_WINDOWS       BOOMDIR "/test/windows/hello.exe"
 
 #include <iostream>
 #include "TypeTest.h"

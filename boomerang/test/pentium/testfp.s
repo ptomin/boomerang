@@ -142,22 +142,6 @@ main:
     push  $result
     call printf
 
-    filds three
-    fisub five
-    fstpl  res1
-    push res2
-    push res1
-    push  $result
-    call printf
-
-    filds three
-    fisubr five
-    fstpl  res1
-    push res2
-    push res1
-    push  $result
-    call printf
-
     rdtsc
 
 	addl	$16, %esp

@@ -4,13 +4,17 @@
  *              tests the Exp and derived classes
  *============================================================================*/
 /*
- * $Revision: 1.5 $
+ * $Revision: 1.4 $
  *
  * 18 Apr 02 - Mike: Created
  * 18 Jul 02 - Mike: Set up prog.pFE before calling readLibParams
  */
 
-#define HELLO_PENTIUM		"test/pentium/hello"
+//#ifndef BOOMDIR
+//#error Must define BOOMDIR
+//#endif
+
+#define HELLO_PENTIUM		BOOMDIR "/test/pentium/hello"
 
 #include "ProgTest.h"
 #include "BinaryFile.h"

@@ -4,14 +4,18 @@
  *              tests the dataflow subsystems
  *============================================================================*/
 /*
- * $Revision: 1.16 $
+ * $Revision: 1.14 $
  *
  * 14 Jan 03 - Trent: Created
  * 17 Apr 03 - Mike: Added testRecursion to track down a nasty bug
  */
 
-#define HELLO_PENTIUM      "test/pentium/hello"
-#define FIB_PENTIUM        "test/pentium/fib"
+#ifndef BOOMDIR
+#error Must define BOOMDIR
+#endif
+
+#define HELLO_PENTIUM       BOOMDIR "/test/pentium/hello"
+#define FIB_PENTIUM        BOOMDIR "/test/pentium/fib"
 
 #include "StatementTest.h"
 #include "cfg.h"
@@ -790,8 +794,8 @@ void StatementTest::testClone () {
                 Location::regOf(9),
                 new Const(99)));
     Assign* a2 = new Assign(new IntegerType(16),
-            new Location(opParam, new Const("x"), NULL),
-            new Location(opParam, new Const("y"), NULL));
+            new Unary(opParam, new Const("x")),
+            new Unary(opParam, new Const("y")));
     Statement* c1 = a1->clone();
     Statement* c2 = a2->clone();
     std::ostringstream o1, o2;

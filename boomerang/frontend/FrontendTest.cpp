@@ -4,15 +4,16 @@
  *              tests the FrontEnd and related classes
  *============================================================================*/
 /*
- * $Revision: 1.3 $
+ * $Revision: 1.2 $
  *
  * 05 Apr 02 - Mike: Created
  */
 
-#define HELLO_SPARC     "test/sparc/hello"
-#define HELLO_PENTIUM   "test/pentium/hello"
-#define HELLO_HPPA      "test/hppa/hello"
-#define STARTER_PALM    "test/mc68328/Starter.prc"
+// Note: requires -DBOOMDIR=
+#define HELLO_SPARC     BOOMDIR"/test/sparc/hello"
+#define HELLO_PENTIUM   BOOMDIR"/test/pentium/hello"
+#define HELLO_HPPA      BOOMDIR"/test/hppa/hello"
+#define STARTER_PALM    BOOMDIR"/test/mc68328/Starter.prc"
 
 #include "FrontendTest.h"
 #include "prog.h"

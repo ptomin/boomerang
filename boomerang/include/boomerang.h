@@ -12,7 +12,7 @@
  * OVERVIEW:    interface for the boomerang singleton object
  *============================================================================*/
 /*
- * $Revision: 1.47 $
+ * $Revision: 1.45 $
  * 04 Dec 2002: Trent: Created
  */
 
@@ -38,9 +38,7 @@ private:
     void usage();
     void help();
     void helpcmd();
-    int splitLine(char *line, char ***pargv);
-    int parseCmd(int argc, const char **argv);
-    int cmdLine();
+    int parseCmd(int argc, const char **argv, int n);
 
     Boomerang();
 public:
@@ -99,7 +97,6 @@ public:
     bool debugUnusedStmt;
     bool loadBeforeDecompile;
     bool saveBeforeDecompile;
-    bool overlapped;
 };
 
 #define VERBOSE  (Boomerang::get()->vFlag)
