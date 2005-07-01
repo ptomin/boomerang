@@ -34,50 +34,51 @@
 #include "proc.h"
 #include "prog.h"
 #include "decoder.h"
-#include "ppcdecoder.h"
+#include "st20decoder.h"
 #include "BinaryFile.h"
 #include "frontend.h"
-#include "ppcfrontend.h"
+#include "st20frontend.h"
 #include "BinaryFile.h"		// E.g. IsDynamicallyLinkedProc
 #include "boomerang.h"
 #include "signature.h"
 
-PPCFrontEnd::PPCFrontEnd(BinaryFile *pBF, Prog* prog) : FrontEnd(pBF, prog)
-{
-	decoder = new PPCDecoder(prog);
+ST20FrontEnd::ST20FrontEnd(BinaryFile *pBF, Prog* prog) : FrontEnd(pBF, prog) {
+	decoder = new ST20Decoder();
 }
 
 
 // destructor
-PPCFrontEnd::~PPCFrontEnd()
+ST20FrontEnd::~ST20FrontEnd()
 {
 }
 
 
-std::vector<Exp*> &PPCFrontEnd::getDefaultParams()
+std::vector<Exp*> &ST20FrontEnd::getDefaultParams()
 {
 	static std::vector<Exp*> params;
 	if (params.size() == 0) {
-		for (int r=31; r>=0; r--) {
+#if 0
+		for (int r=0; r<=2; r++) {
 			params.push_back(Location::regOf(r));
 		}
+#endif
+		params.push_back(Location::memOf(Location::regOf(3)));
 	}
 	return params;
 }
 
-std::vector<Exp*> &PPCFrontEnd::getDefaultReturns()
+std::vector<Exp*> &ST20FrontEnd::getDefaultReturns()
 {
 	static std::vector<Exp*> returns;
 	if (returns.size() == 0) {
-		for (int r=31; r>=0; r--) {
-			returns.push_back(Location::regOf(r));
-		}
-
+		returns.push_back(Location::regOf(0));
+		returns.push_back(Location::regOf(3));
+//		returns.push_back(new Terminal(opPC));
 	}
 	return returns;
 }
 
-ADDRESS PPCFrontEnd::getMainEntryPoint( bool &gotMain ) 
+ADDRESS ST20FrontEnd::getMainEntryPoint( bool &gotMain ) 
 {
 	gotMain = true;
 	ADDRESS start = pBF->GetMainEntryPoint();
@@ -92,7 +93,7 @@ ADDRESS PPCFrontEnd::getMainEntryPoint( bool &gotMain )
 }
 
 
-bool PPCFrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bool frag /* = false */,
+bool ST20FrontEnd::processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bool frag /* = false */,
 		bool spec /* = false */) {
 
 	// Call the base class to do most of the work

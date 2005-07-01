@@ -1,10 +1,8 @@
-/*
- *$Revision: 1.2 $	// 1.1.2.1
- */
-#ifndef PPCFRONTEND_H
-#define PPCFRONTEND_H
 
-// Class PPCFrontEnd: derived from FrontEnd, with source machine specific
+#ifndef ST20FRONTEND_H
+#define ST20FRONTEND_H
+
+// Class ST20FrontEnd: derived from FrontEnd, with source machine specific
 // behaviour
 
 #include <set>
@@ -13,20 +11,20 @@
 #include "frontend.h"		// In case included bare, e.g. ProcTest.cpp
 
 class FrontEnd;
-class PPCDecoder;
+class ST20Decoder;
 struct DecodeResult;
 class CallStatement;
 
-class PPCFrontEnd : public FrontEnd
+class ST20FrontEnd : public FrontEnd
 {
 public:
-				PPCFrontEnd(BinaryFile *pBF, Prog* prog);
+  ST20FrontEnd(BinaryFile *pBF, Prog* prog);
 	/**
 	 * Virtual destructor.
 	 */
-virtual ~PPCFrontEnd();
+virtual ~ST20FrontEnd();
 
-virtual platform getFrontEndId() { return PLAT_PPC; }
+virtual platform getFrontEndId() { return PLAT_ST20; }
 
 virtual bool		processProc(ADDRESS uAddr, UserProc* pProc, std::ofstream &os, bool frag = false,
 						bool spec = false);

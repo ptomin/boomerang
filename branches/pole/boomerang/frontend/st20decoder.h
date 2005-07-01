@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 1996-2001, The University of Queensland
- * Copyright (C) 2001, Sun Microsystems, Inc
+ * Copyright (C) 2005, Mike Van Emmerik
  *
  * See the file "LICENSE.TERMS" for information on usage and
  * redistribution of this file, and for a DISCLAIMER OF ALL
@@ -9,31 +8,30 @@
  */
 
 /*==============================================================================
- * FILE:	   pentdecoder.h
- * OVERVIEW:   The implementation of the instruction decoder for Pentium.
+ * FILE:	   st20decoder.h
+ * OVERVIEW:   The definition of the instruction decoder for ST20.
  *============================================================================*/
 
 /* 
- * $Revision: 1.5 $
- * 06 Jun 02 - Trent: Created.
- *
+ * $Revision: 1.1.2.2 $
+ * 10/Mar/05 MVE and Dr Aus: Created.
  */
 
-#ifndef PENTDECODER
-#define PENTDECODER
+#ifndef ST20DECODER
+#define ST20DECODER
 
 class Prog;
 class NJMCDecoder;
 struct DecodeResult;
 
-class PentiumDecoder : public NJMCDecoder
+class ST20Decoder : public NJMCDecoder
 {
 public:
 	/* Default constructor
 	 */
-	PentiumDecoder(Prog* prog);
+	ST20Decoder();
 
-	/*
+	/**
 	 * Decodes the machine instruction at pc and returns an RTL instance for
 	 * the instruction.
 	 */
@@ -45,20 +43,25 @@ virtual DecodeResult& decodeInstruction (ADDRESS pc, int delta);
 	 */
 virtual int decodeAssemblyInstruction (ADDRESS pc, int delta);
 
+
 private:
 	/*
 	 * Various functions to decode the operands of an instruction into
 	 * a SemStr representation.
 	 */
-	Exp*	dis_Eaddr(ADDRESS pc, int size = 0);
-	Exp*	dis_Mem(ADDRESS ps);
+	//Exp*	dis_Eaddr(ADDRESS pc, int size = 0);
+	//Exp*	dis_RegImm(ADDRESS pc);
+	//Exp*	dis_Reg(unsigned r);
+	//Exp*	dis_RAmbz(unsigned r);		// Special for rA of certain instructions
 
 	void	unused(int x);
+	RTL*	createBranchRtl(ADDRESS pc, std::list<Statement*>* stmts,
+			  const char* name);
 	bool	isFuncPrologue(ADDRESS hostPC);
+	DWord	getDword(ADDRESS lc);
+	SWord	getWord(ADDRESS lc);
+	Byte	getByte(ADDRESS lc);
 
-	Byte	getByte(unsigned lc);
-	SWord	getWord(unsigned lc);
-	DWord	getDword(unsigned lc);
 };
 
 #endif
