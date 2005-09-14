@@ -1,0 +1,143 @@
+######################################################
+# File: Makefile
+#
+# Desc: Makefile for the Loader library files.
+#   This loader is lightly adapted from the loader in UQBT
+#   Purpose is to load the input binary file into memory, with calls to iterate through sections,
+#	find entry points, symbols, etc.
+#   The main library is BinaryFile, which calls eactly one of ElfBinaryFile etc as needed.
+#
+# Prerequisite libraries: none
+#
+######################################################
+
+# $Revision: 1.28 $
+# Note: gnu make is probably required (for patsubst etc)
+# Whole make is dependent on finding the pattern *BinaryFile.cpp;
+# a lib%.so file is made for each of these
+# You should be able to add a simple loader without any changes to this
+# Makefile, as long as you follow the naming convention <type>BinaryFile.*
+
+# 10 Apr 02 - Mike: interface -> include; use util.so for str()
+# 11 Apr 02 - Mike: Use lib%.so names and -l now; no "make install" any more
+# 17 Apr 02 - Mike: Use $(shell pwd) to get an absolute path for BOOMDIR
+# 26 Apr 02 - Mike: Make .so from .o files now
+# 16 Jul 02 - Mike: Removed prog again; no longer needed for serialise code
+# 20 Aug 02 - Icer: removed testLoader from being a dependecy of all:
+# 01 Oct 02 - Mike: testLoader restored; removed ElfDetails
+# 20 Jul 04 - Mike: Removed BOOMDIR (paths relative now)
+# 12 Jul 05 - Mike: All use SymTab.o now
+
+C = gcc -Wall -g -O0
+CC = g++ -Wall -g -O0
+CXX=$(CC)
+
+# HOST_WINDOWS is "yes" if the host OS is Cygwin or MinGW
+HOST_WINDOWS = @HOST_WINDOWS@
+
+# HOST_OSX is true if the hostOS is OS X (*-apple-darwin*)
+HOST_OSX = @HOST_OSX@
+
+# UNDERSCORE_NEEDED is true if the host is OS X 10.2
+UNSERSCORE_NEEDED = @UNDERSCORE_NEEDED@
+
+# HOST_GNU_LD is true if the linker on this host machine is GNU
+HOST_GNU_LD = @HOST_GNU_LD@
+
+# LDL is -ldl if needed (Cygwin and MinGW do not need it)
+ifeq ($(HOST_WINDOWS), yes)
+LDL=
+FPIC=
+EXEEXT=.exe
+DLLEXT=.dll
+OUTIMPLIB=-Wl,--out-implib,$@.a
+BASEIMPLIB=../lib/libBinaryFile.dll.a
+RUNPATH=
+COPYDLL=../libBinaryFile.dll
+else # Non-Windows
+LDL=-ldl
+FPIC=-fPIC
+EXEEXT=
+DLLEXT=.so
+OUTIMPLIB=
+BASEIMPLIB=
+COPYDLL=
+ifeq ($(HOST_GNU_LD), yes)
+RUNPATH=-Wl,-rpath -Wl,"lib"
+else # Assume Solaris
+RUNPATH=-R"lib"
+endif
+endif
+
+ifeq ($(HOST_OSX), yes)
+SHARED=-dynamiclib #-flat_namespace
+DLLEXT=.dylib
+RUNPATH=
+else # Non-OS X
+SHARED=-shared
+endif
+
+LOADERS=ElfBinaryFile Win32BinaryFile ExeBinaryFile HpSomBinaryFile PalmBinaryFile MachOBinaryFile
+LOADERDLLS=$(patsubst %,../lib/lib%$(DLLEXT),$(LOADERS))
+BASEDLL=../lib/libBinaryFile$(DLLEXT)
+ALLDLLS=$(LOADERDLLS) $(BASEDLL)
+ALLLIBS=$(patsubst %,-l%,$(LOADERS)) -lBinaryFile
+ALLOBJS = $(patsubst %, %.o, $(LOADERS))
+ALLOBJS += BinaryFile.o SymTab.o
+
+all:    $(ALLDLLS) $(COPYDLL)
+
+# HOST_GNU_LD is "yes" if the linker on this host machine is GNU
+HOST_GNU_LD = @HOST_GNU_LD@
+
+
+
+testLoader$(EXEEXT): testLoader.o LoaderTest.o microX86dis.o BinaryFileFactory.o SymTab.o
+	$(CC) -o $@ $^  -lcppunit $(ALLLIBS) $(RUNPATH) $(LDL) -L../lib
+
+testLoader.o: testLoader.cpp
+	$(CC) -c -o $@ -I../include $<
+
+LoaderTest.o: LoaderTest.cpp LoaderTest.h ../include/BinaryFile.h SymTab.o
+	$(CC) -c -o $@ -I../include $<
+
+microX86dis.o: microX86dis.c
+	$(C) -c -o $@ $(FPIC) $<
+
+# Extra object files, etc
+# These are target specific variables.
+../lib/libWin32BinaryFile$(DLLEXT):   EXTRAS = microX86dis.o
+
+../libBinaryFile$(DLLEXT): ../lib/libBinaryFile$(DLLEXT)
+	cp $< $@
+
+BinaryFile.o:		CCEXTRAS = -DBUILDING_LIBBINARYFILE
+MachOBinaryFile.o:	CCEXTRAS = -I.
+
+$(BASEDLL) : BinaryFile.o SymTab.o
+	$(CC) -o $@ $(SHARED) BinaryFile.o SymTab.o $(OUTIMPLIB)
+
+# This pattern generates all the main dependencies
+$(LOADERDLLS): ../lib/lib%$(DLLEXT) : %.o $(BASEDLL)
+	$(CC) -o $@ $(SHARED) $< SymTab.o $(EXTRAS) -lBinaryFile $(RUNPATH) -L../lib
+
+# Compile all objects with -fPIC
+$(ALLOBJS): %.o : %.cpp
+	$(CC) -c $(FPIC) $(CCEXTRAS) -I../include -o $@ $<
+
+# Dependencies
+../lib/libWin32BinaryFile$(DLLEXT): microX86dis.o
+Win32BinaryFile.o: Win32BinaryFile.h ../include/BinaryFile.h SymTab.o
+ElfBinaryFile.o: ElfBinaryFile.h ../include/BinaryFile.h SymTab.o
+HpSomBinaryFile.o: SymTab.o
+ExeBinaryFile.o: SymTab.o
+MachOBinaryFile.o: SymTab.o
+
+clean:
+	-rm -f *.o $(ALLDLLS) $(COPYDLL) testLoader$(EXEEXT) $(BASEIMPLIB)
+
+# Because of the relative paths, testLoader will only work from the parent
+# directory...
+test: all testLoader$(EXEEXT)
+	cd .. ; loader/testLoader$(EXEEXT); cd -
+
