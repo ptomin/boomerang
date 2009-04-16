@@ -1,0 +1,11 @@
+gl.h
+stdlib.h
+string.h
+stdio.h
+math.h
+glu.h
+glut.h
+signal.h
+ctype.h
+fcntl.h
+socket.h
