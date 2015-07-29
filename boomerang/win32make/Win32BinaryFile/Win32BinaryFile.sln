@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32BinaryFile", "Win32BinaryFile.vcxproj", "{EDD5A43B-22DE-4C53-BF4C-8FCEFA7503C2}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32BinaryFile", "Win32BinaryFile.vcproj", "{8D926C88-2352-4F98-BEB6-F8FF6F5DB082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EDD5A43B-22DE-4C53-BF4C-8FCEFA7503C2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EDD5A43B-22DE-4C53-BF4C-8FCEFA7503C2}.Debug|Win32.Build.0 = Debug|Win32
-		{EDD5A43B-22DE-4C53-BF4C-8FCEFA7503C2}.Release|Win32.ActiveCfg = Release|Win32
-		{EDD5A43B-22DE-4C53-BF4C-8FCEFA7503C2}.Release|Win32.Build.0 = Release|Win32
+		{8D926C88-2352-4F98-BEB6-F8FF6F5DB082}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D926C88-2352-4F98-BEB6-F8FF6F5DB082}.Debug|Win32.Build.0 = Debug|Win32
+		{8D926C88-2352-4F98-BEB6-F8FF6F5DB082}.Release|Win32.ActiveCfg = Release|Win32
+		{8D926C88-2352-4F98-BEB6-F8FF6F5DB082}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

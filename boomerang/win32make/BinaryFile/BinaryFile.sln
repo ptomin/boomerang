@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BinaryFile", "BinaryFile.vcxproj", "{A785802D-00A3-4B87-B60B-464AF962BB2C}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BinaryFile", "BinaryFile.vcproj", "{85201624-A1F0-40D3-9A74-4FEFA347CB4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A785802D-00A3-4B87-B60B-464AF962BB2C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A785802D-00A3-4B87-B60B-464AF962BB2C}.Debug|Win32.Build.0 = Debug|Win32
-		{A785802D-00A3-4B87-B60B-464AF962BB2C}.Release|Win32.ActiveCfg = Release|Win32
-		{A785802D-00A3-4B87-B60B-464AF962BB2C}.Release|Win32.Build.0 = Release|Win32
+		{85201624-A1F0-40D3-9A74-4FEFA347CB4B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85201624-A1F0-40D3-9A74-4FEFA347CB4B}.Debug|Win32.Build.0 = Debug|Win32
+		{85201624-A1F0-40D3-9A74-4FEFA347CB4B}.Release|Win32.ActiveCfg = Release|Win32
+		{85201624-A1F0-40D3-9A74-4FEFA347CB4B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
