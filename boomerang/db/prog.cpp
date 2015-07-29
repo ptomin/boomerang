@@ -1942,11 +1942,8 @@ Exp *Prog::readNativeAs(ADDRESS uaddr, Type *type)
         }
     if (type->resolvesToArray())
         {
-            int nelems = -1;
-            const char *nam = getGlobalName(uaddr);
             int base_sz = type->asArray()->getBaseType()->getSize() / 8;
-            if (nam != NULL)
-                nelems = pBF->GetSizeByName(nam) / base_sz;
+            int nelems = type->asArray()->getLength();
             Exp *n = e = new Terminal(opNil);
             for (int i = 0; nelems == -1 || i < nelems; i++)
                 {
