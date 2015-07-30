@@ -887,7 +887,7 @@ const char* Win32BinaryFile::SymbolByAddress(ADDRESS dwAddr)
     sym->MaxNameLen = 1000;
     sym->Name[0] = 0;
     BOOL got = dbghelp::SymFromAddr(hProcess, dwAddr, 0, sym);
-    if (*sym->Name)
+    if (*sym->Name && sym->Address == dwAddr)
         {
             char *n = strdup(sym->Name);
 #if 0
